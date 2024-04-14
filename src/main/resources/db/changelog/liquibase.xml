@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1 task manager init migration" author="devkabezrooki">
+        <createTable tableName="tasks">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_tasks"/>
+            </column>
+            <column name="title" remarks="Заголовок задачи" type="java.sql.Types.VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" remarks="Описание задачи" type="java.sql.Types.VARCHAR(4000)"/>
+            <column name="due_date" remarks="Крайний срок выполнения задачи" type="timestamp(6)"/>
+            <column name="is_completed" remarks="Признак, что задача выполнена" type="java.sql.Types.BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="1"/>
+            <column name="title" value="T1 ДЗ 1"/>
+            <column name="description" value="Дз 1 в Открытой школе Java-разработчиков (Spring AOP)"/>
+            <column name="due_date" valueDate="2024-04-14"/>
+            <column name="is_completed" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="2"/>
+            <column name="title" value="T1 ДЗ 2"/>
+            <column name="description" value="Дз 2 в Открытой школе Java-разработчиков (система управления задачами)"/>
+            <column name="due_date" valueDate="2024-04-18"/>
+            <column name="is_completed" valueDate="false"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="3"/>
+            <column name="title" value="Кафка"/>
+            <column name="description" value="Посмотреть туториалы по Кафке"/>
+            <column name="is_completed" valueDate="false"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="4"/>
+            <column name="title" value="T1 ДЗ 3"/>
+            <column name="description" value="Дз 3 в Открытой школе Java-разработчиков (Кафка)"/>
+            <column name="due_date" valueDate="2024-04-25"/>
+            <column name="is_completed" valueDate="false"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="5"/>
+            <column name="title" value="T1 ДЗ 4"/>
+            <column name="due_date" valueDate="2024-05-02"/>
+            <column name="is_completed" valueDate="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
