@@ -36,19 +36,21 @@ public class TaskService {
     }
 
     @Transactional
-    public void createTask(TaskInput taskInput) {
+    public TaskResponse createTask(TaskInput taskInput) {
         Task task = TaskMapper.createTaskFromInput(taskInput);
         taskRepository.save(task);
+        return TaskMapper.createTaskResponseFromTask(task);
     }
 
     @Transactional
-    public void updateTask(Long id, @Nullable TaskInput taskInput) {
+    public TaskResponse updateTask(Long id, @Nullable TaskInput taskInput) {
         Task task = getByIdOrThrow(id);
         if (taskInput != null) {
             TaskMapper.updateTaskFromInput(task, taskInput);
         } else {
             task.setCompleted(true);
         }
+        return TaskMapper.createTaskResponseFromTask(task);
     }
 
     @Transactional
