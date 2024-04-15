@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +33,10 @@ public class TaskServiceTest {
     TaskService taskService;
 
     private static Task expectedTask;
-    private static TaskInput taskInput;
+
+    private static TaskInput testTaskInput;
+
+    private static SimpleDateFormat dateFormatter;
 
     @BeforeAll
     public static void initFields() {
@@ -42,11 +46,13 @@ public class TaskServiceTest {
         expectedTask.setDueDate(new Date(2024, 04, 16));
         expectedTask.setCompleted(true);
 
-        taskInput = new TaskInput()
+        testTaskInput = new TaskInput()
                 .setTitle("Task1")
                 .setDescription("Desc1")
                 .setDueDate(new Date(2024, 04, 16))
                 .setCompleted(true);
+
+        dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     }
 
     @Test
@@ -78,7 +84,7 @@ public class TaskServiceTest {
 
         assertEquals(expectedTask.getTitle(), result.getTitle());
         assertEquals(expectedTask.getDescription(), result.getDescription());
-        assertEquals(expectedTask.getDueDate(), result.getDueDate());
+        assertEquals(dateFormatter.format(expectedTask.getDueDate()), result.getDueDate());
         assertEquals(expectedTask.isCompleted(), result.isCompleted());
     }
 
@@ -97,11 +103,11 @@ public class TaskServiceTest {
     public void testCreateTask_Success() {
         when(taskRepository.save(any(Task.class))).thenReturn(expectedTask);
 
-        TaskResponse result = taskService.createTask(taskInput);
+        TaskResponse result = taskService.createTask(testTaskInput);
 
         assertEquals(expectedTask.getTitle(), result.getTitle());
         assertEquals(expectedTask.getDescription(), result.getDescription());
-        assertEquals(expectedTask.getDueDate(), result.getDueDate());
+        assertEquals(dateFormatter.format(expectedTask.getDueDate()), result.getDueDate());
         assertEquals(expectedTask.isCompleted(), result.isCompleted());
     }
 
@@ -111,18 +117,18 @@ public class TaskServiceTest {
 
         when(taskRepository.findById(taskId)).thenReturn(Optional.ofNullable(expectedTask));
 
-        TaskResponse result = taskService.updateTask(taskId, taskInput);
+        TaskResponse result = taskService.updateTask(taskId, testTaskInput);
 
         assertEquals(expectedTask.getTitle(), result.getTitle());
         assertEquals(expectedTask.getDescription(), result.getDescription());
-        assertEquals(expectedTask.getDueDate(), result.getDueDate());
+        assertEquals(dateFormatter.format(expectedTask.getDueDate()), result.getDueDate());
         assertEquals(expectedTask.isCompleted(), result.isCompleted());
 
         result = taskService.updateTask(taskId, null);
 
         assertEquals(expectedTask.getTitle(), result.getTitle());
         assertEquals(expectedTask.getDescription(), result.getDescription());
-        assertEquals(expectedTask.getDueDate(), result.getDueDate());
+        assertEquals(dateFormatter.format(expectedTask.getDueDate()), result.getDueDate());
         assertEquals(expectedTask.isCompleted(), result.isCompleted());
     }
 
@@ -136,7 +142,7 @@ public class TaskServiceTest {
             taskService.updateTask(taskId, null);
         });
         assertThrows(EntityNotFoundException.class, () -> {
-            taskService.updateTask(taskId, taskInput);
+            taskService.updateTask(taskId, testTaskInput);
         });
     }
 

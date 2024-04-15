@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,21 +27,19 @@ public class TaskControllerTest {
 
     @Mock
     private TaskService taskService;
-
     @InjectMocks
     private TaskController taskController;
-
     private static TaskResponse expectedTask;
-    private static TaskInput taskInput;
+    private static TaskInput testTaskInput;
 
     @BeforeAll
     public static void initFields() {
         expectedTask = new TaskResponse()
                 .setTitle("Task1")
                 .setDescription("Desc1")
-                .setDueDate(new Date(2024, 04, 16))
+                .setDueDate(new SimpleDateFormat("dd.MM.yyyy").format(new Date(2024, 04, 16)))
                 .setCompleted(true);
-        taskInput = new TaskInput()
+        testTaskInput = new TaskInput()
                 .setTitle("Task1")
                 .setDescription("Desc1")
                 .setDueDate(new Date(2024, 04, 16))
@@ -54,7 +53,7 @@ public class TaskControllerTest {
         expectedTasks.add(
                 new TaskResponse()
                         .setTitle("Task2")
-                        .setDueDate(new Date(2024, 04, 16))
+                        .setDueDate(new SimpleDateFormat("dd.MM.yyyy").format(new Date(2024, 04, 16)))
                         .setCompleted(false)
         );
         expectedTasks.add(
@@ -102,9 +101,9 @@ public class TaskControllerTest {
 
     @Test
     public void testCreateTask_Success() {
-        when(taskService.createTask(taskInput)).thenReturn(expectedTask);
+        when(taskService.createTask(testTaskInput)).thenReturn(expectedTask);
 
-        ResponseEntity<TaskResponse> response = taskController.createTask(taskInput);
+        ResponseEntity<TaskResponse> response = taskController.createTask(testTaskInput);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -119,9 +118,9 @@ public class TaskControllerTest {
         Long taskId = 1L;
 
         when(taskService.updateTask(taskId, null)).thenReturn(expectedTask);
-        when(taskService.updateTask(taskId, taskInput)).thenReturn(expectedTask);
+        when(taskService.updateTask(taskId, testTaskInput)).thenReturn(expectedTask);
 
-        ResponseEntity<TaskResponse> response = taskController.updateTask(taskId, taskInput);
+        ResponseEntity<TaskResponse> response = taskController.updateTask(taskId, testTaskInput);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -145,13 +144,13 @@ public class TaskControllerTest {
         Long taskId = 1001L;
 
         when(taskService.updateTask(taskId, null)).thenThrow(new EntityNotFoundException(taskId, Task.class));
-        when(taskService.updateTask(taskId, taskInput)).thenThrow(new EntityNotFoundException(taskId, Task.class));
+        when(taskService.updateTask(taskId, testTaskInput)).thenThrow(new EntityNotFoundException(taskId, Task.class));
 
         assertThrows(EntityNotFoundException.class, () -> {
             taskController.updateTask(taskId, null);
         });
         assertThrows(EntityNotFoundException.class, () -> {
-            taskController.updateTask(taskId, taskInput);
+            taskController.updateTask(taskId, testTaskInput);
         });
     }
 

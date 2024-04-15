@@ -2,6 +2,7 @@ package com.example.t1taskmanager.exception;
 
 import com.example.t1taskmanager.exception.model.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +30,13 @@ public class TaskManagerExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     public String handleEntityNotFoundException(Exception ex) {
+        return "Возникло исключение: " + ex.getMessage();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String handleMethodArgumentNotValidException(Exception ex) {
         return "Возникло исключение: " + ex.getMessage();
     }
 }

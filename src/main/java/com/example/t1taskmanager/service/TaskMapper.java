@@ -4,6 +4,8 @@ import com.example.t1taskmanager.model.Task;
 import com.example.t1taskmanager.model.dto.TaskInput;
 import com.example.t1taskmanager.model.dto.TaskResponse;
 
+import java.text.SimpleDateFormat;
+
 public class TaskMapper {
 
     public static Task createTaskFromInput(TaskInput taskInput) {
@@ -27,10 +29,13 @@ public class TaskMapper {
     }
 
     public static TaskResponse createTaskResponseFromTask(Task task) {
+        String dueDateString = task.getDueDate() != null
+                ? new SimpleDateFormat("dd.MM.yyyy").format(task.getDueDate())
+                : null;
         return new TaskResponse()
                 .setTitle(task.getTitle())
                 .setDescription(task.getDescription())
-                .setDueDate(task.getDueDate())
+                .setDueDate(dueDateString)
                 .setCompleted(task.isCompleted());
     }
 }

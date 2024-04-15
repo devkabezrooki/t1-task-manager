@@ -4,14 +4,17 @@ import com.example.t1taskmanager.model.dto.TaskInput;
 import com.example.t1taskmanager.model.dto.TaskResponse;
 import com.example.t1taskmanager.service.TaskService;
 import jakarta.annotation.Nonnull;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
+@Validated
 public class TaskController {
 
     private final TaskService taskService;
@@ -32,13 +35,13 @@ public class TaskController {
     }
 
     @PostMapping()
-    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskInput taskInput) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskInput taskInput) {
         return ResponseEntity.ok(taskService.createTask(taskInput));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> updateTask(@PathVariable(value = "id") Long id,
-                                        @RequestBody(required = false) TaskInput taskInput) {
+                                                   @Valid @RequestBody(required = false) TaskInput taskInput) {
         return ResponseEntity.ok(taskService.updateTask(id, taskInput));
     }
 
