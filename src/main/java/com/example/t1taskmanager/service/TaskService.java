@@ -24,13 +24,14 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TaskResponse> getAllTasks() {
         return taskRepository.findAll().stream()
                 .map(t -> TaskMapper.createTaskResponseFromTask(t))
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public TaskResponse getTask(Long id) {
         return TaskMapper.createTaskResponseFromTask(getByIdOrThrow(id));
     }
@@ -59,8 +60,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    @Transactional
-    public Task getByIdOrThrow(Long id) {
+    private Task getByIdOrThrow(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id, Task.class));
     }
 }
